@@ -1,0 +1,241 @@
+{
+  "938616369619034114": [
+    {
+      "match": "sneed vs chuck",
+      "bet": {
+        "wrestler": "sneed",
+        "amount": 23
+      },
+      "result": "Won 46 coins"
+    },
+    {
+      "match": "wawi vs diddy",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 200
+      },
+      "result": "Lost 200 coins"
+    },
+    {
+      "match": "undefined vs undefined",
+      "bet": {
+        "amount": 45
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "sadadasd vs sdasdasd",
+      "bet": {
+        "wrestler": "sadadasd",
+        "amount": 22
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "asdasda vs kjkljkljas",
+      "bet": {
+        "wrestler": "kjkljkljas",
+        "amount": 55
+      },
+      "result": "Lost 55 coins"
+    },
+    {
+      "match": "Mario vs Luigi",
+      "bet": {
+        "wrestler": "Mario",
+        "amount": 33
+      },
+      "result": "Won 66 coins"
+    },
+    {
+      "match": "Wario vs Mario",
+      "bet": {
+        "wrestler": "Wario",
+        "amount": 55
+      },
+      "result": "Lost 55 coins"
+    },
+    {
+      "match": "Mario vs Luigi",
+      "bet": {
+        "wrestler": "Mario",
+        "amount": 12
+      },
+      "result": "Lost 12 coins"
+    },
+    {
+      "match": "Mario vs Luigi",
+      "bet": {
+        "wrestler": "Mario",
+        "amount": 45
+      },
+      "result": "Lost 45 coins"
+    },
+    {
+      "match": "cowfags vs weakest japanese crew",
+      "bet": {
+        "wrestler": "cowfags",
+        "amount": 49
+      },
+      "result": "Lost 49 coins"
+    },
+    {
+      "match": "3k vs birby",
+      "bet": {
+        "wrestler": "3k",
+        "amount": 43
+      },
+      "result": "Won 86 coins"
+    },
+    {
+      "match": "john vs cena",
+      "bet": {
+        "wrestler": "john",
+        "amount": 12
+      },
+      "result": "Lost 12 coins"
+    },
+    {
+      "match": "mario vs bros",
+      "bet": {
+        "wrestler": "bros",
+        "amount": 212
+      },
+      "result": "Won 424 coins"
+    },
+    {
+      "match": "WER vs SDASDAS",
+      "bet": {
+        "wrestler": "WER",
+        "amount": 780
+      },
+      "result": "Lost 780 coins"
+    },
+    {
+      "match": "mario vs luigi",
+      "bet": {
+        "wrestler": "mario",
+        "amount": 6
+      },
+      "result": "Won 12 coins"
+    },
+    {
+      "match": "ASLDKASD vs ASDLKASKL;",
+      "bet": {
+        "wrestler": "ASLDKASD",
+        "amount": 455
+      },
+      "result": "Lost 455 coins"
+    }
+  ],
+  "105137300744192000": [
+    {
+      "match": "wawi vs diddy",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 500
+      },
+      "result": "Lost 500 coins"
+    },
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 500
+      },
+      "result": "Pending"
+    }
+  ],
+  "163566477138591744": [
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "another wawi",
+        "amount": 1
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 2
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "another wawi",
+        "amount": 1
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "another wawi",
+        "amount": 3
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs even another wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 1
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs even another wawi",
+      "bet": {
+        "wrestler": "even another wawi",
+        "amount": 1
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs even another wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 2
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "wawi vs even another wawi",
+      "bet": {
+        "wrestler": "even another wawi",
+        "amount": 3
+      },
+      "result": "Lost 3 coins"
+    },
+    {
+      "match": "ASLDKASD vs ASDLKASKL;",
+      "bet": {
+        "wrestler": "ASLDKASD",
+        "amount": 1
+      },
+      "result": "Pending"
+    },
+    {
+      "match": "ASLDKASD vs ASDLKASKL;",
+      "bet": {
+        "wrestler": "ASDLKASKL;",
+        "amount": 1
+      },
+      "result": "Won 2 coins"
+    }
+  ],
+  "80944068707745792": [
+    {
+      "match": "wawi vs another wawi",
+      "bet": {
+        "wrestler": "another wawi",
+        "amount": 1
+      },
+      "result": "Pending"
+    }
+  ]
+}
