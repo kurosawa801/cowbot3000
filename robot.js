@@ -128,9 +128,8 @@ function saveCoins() {
 
 // Function to get user balance
 function getUserBalance(userId) {
-    loadCoins(); // Reload coins before checking balance
-    if (!coins[userId]) {
-        coins[userId] = 500; // Initialize with 500 coins if not exists
+    if (!(userId in coins)) {
+        coins[userId] = 500; // Initialize with 500 coins only for new users
         saveCoins();
     }
     return coins[userId];
@@ -138,8 +137,11 @@ function getUserBalance(userId) {
 
 // Function to update user balance
 function updateUserBalance(userId, amount) {
-    loadCoins(); // Reload coins before updating
-    coins[userId] = (coins[userId] || 500) + amount;
+    if (!(userId in coins)) {
+        coins[userId] = 500; // Initialize with 500 coins only for new users
+    }
+    coins[userId] += amount;
+    if (coins[userId] < 0) coins[userId] = 0; // Ensure balance doesn't go negative
     saveCoins();
     console.log(`Updated balance for user ${userId}: ${coins[userId]} coins`);
 }
@@ -199,7 +201,13 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
                 ),
             new SlashCommandBuilder().setName('balance').setDescription('Check your coin balance'),
             new SlashCommandBuilder().setName('betstate').setDescription('Check the current betting state'),
-            new SlashCommandBuilder().setName('history').setDescription('View your betting history')
+            new SlashCommandBuilder().setName('history').setDescription('View your betting history'),
+            new SlashCommandBuilder().setName('addcoins').setDescription('Add coins to a user (Handler only)')
+                .addUserOption(option => option.setName('user').setDescription('User to add coins to').setRequired(true))
+                .addIntegerOption(option => option.setName('amount').setDescription('Amount of coins to add').setRequired(true)),
+            new SlashCommandBuilder().setName('donate').setDescription('Donate coins to another user')
+                .addUserOption(option => option.setName('user').setDescription('User to donate to').setRequired(true))
+                .addIntegerOption(option => option.setName('amount').setDescription('Amount of coins to donate').setRequired(true))
         ];
 
         // Check if guildIds is an array and iterate
@@ -404,6 +412,45 @@ client.on('interactionCreate', async interaction => {
             });
 
             await interaction.reply({ content: historyMessage, ephemeral: true });
+        }
+
+        if (commandName === 'addcoins') {
+            if (!interaction.member.roles.cache.some(role => role.name === 'Handler')) {
+                await interaction.reply('You do not have permission to add coins.', { ephemeral: true });
+                return;
+            }
+
+            const targetUser = options.getUser('user');
+            const amount = options.getInteger('amount');
+
+            if (amount <= 0) {
+                await interaction.reply('Please specify a positive amount of coins to add.', { ephemeral: true });
+                return;
+            }
+
+            updateUserBalance(targetUser.id, amount);
+            await interaction.reply(`Added ${amount} coins to <@${targetUser.id}>'s balance.`);
+        }
+
+        if (commandName === 'donate') {
+            const targetUser = options.getUser('user');
+            const amount = options.getInteger('amount');
+
+            if (amount <= 0) {
+                await interaction.reply('Please specify a positive amount of coins to donate.', { ephemeral: true });
+                return;
+            }
+
+            const donorBalance = getUserBalance(user);
+            if (amount > donorBalance) {
+                await interaction.reply(`You don't have enough coins. Your current balance is ${donorBalance} coins.`, { ephemeral: true });
+                return;
+            }
+
+            updateUserBalance(user, -amount);
+            updateUserBalance(targetUser.id, amount);
+
+            await interaction.reply(`Successfully donated ${amount} coins to <@${targetUser.id}>.`);
         }
     } catch (error) {
         console.error('Error handling command:', error);

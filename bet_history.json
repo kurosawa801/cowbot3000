@@ -126,6 +126,30 @@
         "amount": 455
       },
       "result": "Lost 455 coins"
+    },
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "fake wawi",
+        "amount": 45
+      },
+      "result": "Won 90 coins"
+    },
+    {
+      "match": "Sneed vs Chuck",
+      "bet": {
+        "wrestler": "Sneed",
+        "amount": 102
+      },
+      "result": "Lost 102 coins"
+    },
+    {
+      "match": "Duck vs Cock",
+      "bet": {
+        "wrestler": "Duck",
+        "amount": 500
+      },
+      "result": "Pending"
     }
   ],
   "105137300744192000": [
@@ -236,6 +260,40 @@
         "amount": 1
       },
       "result": "Pending"
+    },
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "fake wawi",
+        "amount": 1
+      },
+      "result": "Won 2 coins"
+    },
+    {
+      "match": "Sneed vs Chuck",
+      "bet": {
+        "wrestler": "Chuck",
+        "amount": 100
+      },
+      "result": "Won 200 coins"
+    }
+  ],
+  "278352341734785024": [
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "fake wawi",
+        "amount": 500
+      },
+      "result": "Won 1000 coins"
+    },
+    {
+      "match": "Sneed vs Chuck",
+      "bet": {
+        "wrestler": "Sneed",
+        "amount": 1500
+      },
+      "result": "Lost 1500 coins"
     }
   ]
 }
