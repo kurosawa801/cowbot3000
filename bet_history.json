@@ -150,6 +150,14 @@
         "amount": 500
       },
       "result": "Pending"
+    },
+    {
+      "match": "me vs you",
+      "bet": {
+        "wrestler": "me",
+        "amount": 345
+      },
+      "result": "Won 690 coins"
     }
   ],
   "105137300744192000": [
@@ -294,6 +302,40 @@
         "amount": 1500
       },
       "result": "Lost 1500 coins"
+    },
+    {
+      "match": "me vs you",
+      "bet": {
+        "wrestler": "me",
+        "amount": 1000
+      },
+      "result": "Won 2000 coins"
+    },
+    {
+      "match": "have sex with wawi vs don't have sex with wawi",
+      "bet": {
+        "wrestler": "don't have sex with wawi",
+        "amount": 2000
+      },
+      "result": "Won 4000 coins"
+    },
+    {
+      "match": "yes vs no",
+      "bet": {
+        "wrestler": "yes",
+        "amount": 4000
+      },
+      "result": "Won 8000 coins"
+    }
+  ],
+  "148155468416679946": [
+    {
+      "match": "have sex with wawi vs don't have sex with wawi",
+      "bet": {
+        "wrestler": "have sex with wawi",
+        "amount": 1
+      },
+      "result": "Lost 1 coins"
     }
   ]
 }

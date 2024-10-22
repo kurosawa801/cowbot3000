@@ -207,7 +207,8 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
                 .addIntegerOption(option => option.setName('amount').setDescription('Amount of coins to add').setRequired(true)),
             new SlashCommandBuilder().setName('donate').setDescription('Donate coins to another user')
                 .addUserOption(option => option.setName('user').setDescription('User to donate to').setRequired(true))
-                .addIntegerOption(option => option.setName('amount').setDescription('Amount of coins to donate').setRequired(true))
+                .addIntegerOption(option => option.setName('amount').setDescription('Amount of coins to donate').setRequired(true)),
+            new SlashCommandBuilder().setName('ranking').setDescription('Show the ranking of users based on their coin balance')
         ];
 
         // Check if guildIds is an array and iterate
@@ -451,6 +452,36 @@ client.on('interactionCreate', async interaction => {
             updateUserBalance(targetUser.id, amount);
 
             await interaction.reply(`Successfully donated ${amount} coins to <@${targetUser.id}>.`);
+        }
+
+        if (commandName === 'ranking') {
+            // Sort users by coin balance in descending order
+            const sortedUsers = Object.entries(coins).sort((a, b) => b[1] - a[1]);
+
+            // Create the ranking message
+            let rankingMessage = '**Coin Balance Ranking**\n\n';
+
+            // Fetch user data for each user ID
+            const userPromises = sortedUsers.map(async ([userId, balance]) => {
+                try {
+                    const user = await client.users.fetch(userId);
+                    return `${user.username}: ${balance} coins`;
+                } catch (error) {
+                    console.error(`Error fetching user ${userId}:`, error);
+                    return `Unknown User (${userId}): ${balance} coins`;
+                }
+            });
+
+            // Wait for all user data to be fetched
+            const userRankings = await Promise.all(userPromises);
+
+            // Add rankings to the message
+            userRankings.forEach((ranking, index) => {
+                rankingMessage += `${index + 1}. ${ranking}\n`;
+            });
+
+            // Send the ranking message
+            await interaction.reply(rankingMessage);
         }
     } catch (error) {
         console.error('Error handling command:', error);
