@@ -158,6 +158,38 @@
         "amount": 345
       },
       "result": "Won 690 coins"
+    },
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 69
+      },
+      "result": "Lost 69 coins"
+    },
+    {
+      "match": "azymorath vs den mysterio",
+      "bet": {
+        "wrestler": "den mysterio",
+        "amount": 400
+      },
+      "result": "Won 800 coins"
+    },
+    {
+      "match": "Wawi vs Fake Wawi vs Army Wawi vs Roblox Wawi vs Wide Wawi vs Dragon of Cowfags vs Wawi Black Rose vs IMAM",
+      "bet": {
+        "wrestler": "Fake Wawi",
+        "amount": 45
+      },
+      "result": "Lost 45 coins"
+    },
+    {
+      "match": "sada vs sada vs asdasd vs asdasdddd",
+      "bet": {
+        "wrestler": "asdasdddd",
+        "amount": 122
+      },
+      "result": "Lost 122 coins"
     }
   ],
   "105137300744192000": [
@@ -258,6 +290,14 @@
         "amount": 1
       },
       "result": "Won 2 coins"
+    },
+    {
+      "match": "Wawi vs Fake Wawi vs Army Wawi vs Roblox Wawi vs Wide Wawi vs Dragon of Cowfags vs Wawi Black Rose vs IMAM",
+      "bet": {
+        "wrestler": "IMAM",
+        "amount": 1
+      },
+      "result": "Lost 1 coins"
     }
   ],
   "80944068707745792": [
@@ -281,6 +321,22 @@
       "match": "Sneed vs Chuck",
       "bet": {
         "wrestler": "Chuck",
+        "amount": 100
+      },
+      "result": "Won 200 coins"
+    },
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "wawi",
+        "amount": 500
+      },
+      "result": "Lost 500 coins"
+    },
+    {
+      "match": "azymorath vs den mysterio",
+      "bet": {
+        "wrestler": "den mysterio",
         "amount": 100
       },
       "result": "Won 200 coins"
@@ -326,6 +382,46 @@
         "amount": 4000
       },
       "result": "Won 8000 coins"
+    },
+    {
+      "match": "wrestler 1 will win vs wrestler 2 will lose",
+      "bet": {
+        "wrestler": "wrestler 2 will lose",
+        "amount": 8000
+      },
+      "result": "Won 16000 coins"
+    },
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "fake wawi",
+        "amount": 8000
+      },
+      "result": "Won 16000 coins"
+    },
+    {
+      "match": "winner vs loser",
+      "bet": {
+        "wrestler": "loser",
+        "amount": 24000
+      },
+      "result": "Won 48000 coins"
+    },
+    {
+      "match": "win vs lose",
+      "bet": {
+        "wrestler": "win",
+        "amount": 1
+      },
+      "result": "Won 2 coins"
+    },
+    {
+      "match": "win vs lose",
+      "bet": {
+        "wrestler": "win",
+        "amount": 1
+      },
+      "result": "Won 2 coins"
     }
   ],
   "148155468416679946": [
@@ -336,6 +432,44 @@
         "amount": 1
       },
       "result": "Lost 1 coins"
+    }
+  ],
+  "238647373423837184": [
+    {
+      "match": "wawi vs fake wawi",
+      "bet": {
+        "wrestler": "fake wawi",
+        "amount": 50
+      },
+      "result": "Won 100 coins"
+    },
+    {
+      "match": "azymorath vs den mysterio",
+      "bet": {
+        "wrestler": "den mysterio",
+        "amount": 100
+      },
+      "result": "Won 200 coins"
+    }
+  ],
+  "212182952719810560": [
+    {
+      "match": "Wawi vs Fake Wawi vs Army Wawi vs Roblox Wawi vs Wide Wawi vs Dragon of Cowfags vs Wawi Black Rose vs IMAM",
+      "bet": {
+        "wrestler": "Wide Wawi",
+        "amount": 100
+      },
+      "result": "Lost 100 coins"
+    }
+  ],
+  "98869953347735552": [
+    {
+      "match": "Wawi vs Fake Wawi vs Army Wawi vs Roblox Wawi vs Wide Wawi vs Dragon of Cowfags vs Wawi Black Rose vs IMAM",
+      "bet": {
+        "wrestler": "Roblox Wawi",
+        "amount": 500
+      },
+      "result": "Lost 500 coins"
     }
   ]
 }

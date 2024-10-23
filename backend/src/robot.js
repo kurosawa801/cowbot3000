@@ -172,20 +172,38 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
     try {
         console.log('Started refreshing application (/) commands for multiple guilds.');
 
+        // Create the start command with up to 8 optional wrestlers
+        const startCommand = new SlashCommandBuilder()
+            .setName('start')
+            .setDescription('Starts a betting round')
+            .addStringOption(option => option.setName('wrestler1').setDescription('First wrestler').setRequired(true))
+            .addStringOption(option => option.setName('wrestler2').setDescription('Second wrestler').setRequired(true));
+
+        // Add optional wrestlers 3-8
+        for (let i = 3; i <= 8; i++) {
+            startCommand.addStringOption(option => 
+                option.setName(`wrestler${i}`).setDescription(`Wrestler ${i} (optional)`).setRequired(false)
+            );
+        }
+
+        // Create dynamic choices for bet and result commands based on max wrestlers
+        const createWrestlerChoices = (maxWrestlers) => {
+            const choices = [];
+            for (let i = 1; i <= maxWrestlers; i++) {
+                choices.push({ name: `Wrestler ${i}`, value: i });
+            }
+            return choices;
+        };
+
         // Define the commands we want to register
         const commands = [
-            new SlashCommandBuilder().setName('start').setDescription('Starts a betting round')
-                .addStringOption(option => option.setName('wrestler1').setDescription('First wrestler').setRequired(true))
-                .addStringOption(option => option.setName('wrestler2').setDescription('Second wrestler').setRequired(true)),
+            startCommand,
             new SlashCommandBuilder().setName('bet').setDescription('Place a bet')
                 .addIntegerOption(option => 
                     option.setName('choice')
-                        .setDescription('1 for first wrestler, 2 for second wrestler')
+                        .setDescription('Choose wrestler number (1-8)')
                         .setRequired(true)
-                        .addChoices(
-                            { name: 'Wrestler 1', value: 1 },
-                            { name: 'Wrestler 2', value: 2 }
-                        )
+                        .addChoices(...createWrestlerChoices(8))
                 )
                 .addIntegerOption(option => option.setName('amount').setDescription('Bet amount').setRequired(true)),
             new SlashCommandBuilder().setName('closebet').setDescription('Closes betting'),
@@ -194,10 +212,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
                     option.setName('winner')
                         .setDescription('Winning wrestler')
                         .setRequired(true)
-                        .addChoices(
-                            { name: 'Wrestler 1', value: 1 },
-                            { name: 'Wrestler 2', value: 2 }
-                        )
+                        .addChoices(...createWrestlerChoices(8))
                 ),
             new SlashCommandBuilder().setName('balance').setDescription('Check your coin balance'),
             new SlashCommandBuilder().setName('betstate').setDescription('Check the current betting state'),
@@ -250,17 +265,33 @@ client.on('interactionCreate', async interaction => {
                 return;
             }
 
-            const wrestler1 = options.getString('wrestler1');
-            const wrestler2 = options.getString('wrestler2');
+            // Get all wrestlers (required and optional)
+            const wrestlers = [];
+            for (let i = 1; i <= 8; i++) {
+                const wrestler = options.getString(`wrestler${i}`);
+                if (wrestler) wrestlers.push(wrestler);
+            }
 
-            match = { wrestler1, wrestler2 };
+            if (wrestlers.length < 2) {
+                await interaction.reply('You must specify at least 2 wrestlers.', { ephemeral: true });
+                return;
+            }
+
+            match = { wrestlers };
             saveMatch();
             isBettingOpen = true;
             saveBettingState(isBettingOpen);
             bets = {}; // Clear previous bets
             saveBets();
 
-            await interaction.reply(`Betting is now open!\n1: **${wrestler1}**\n2: **${wrestler2}**\nUse \`/bet\` to place your bet.`);
+            // Create message listing all wrestlers
+            let message = 'Betting is now open!\n';
+            wrestlers.forEach((wrestler, index) => {
+                message += `${index + 1}: **${wrestler}**\n`;
+            });
+            message += '\nUse `/bet` to place your bet.';
+
+            await interaction.reply(message);
         }
 
         if (commandName === 'bet') {
@@ -274,12 +305,17 @@ client.on('interactionCreate', async interaction => {
 
             console.log('Bet command received:', { choice, amount, match });
 
-            if (!match.wrestler1 || !match.wrestler2) {
+            if (!match.wrestlers || match.wrestlers.length < 2) {
                 await interaction.reply('Error: No active match found. Please start a new bet.', { ephemeral: true });
                 return;
             }
 
-            const chosenWrestler = choice === 1 ? match.wrestler1 : match.wrestler2;
+            if (choice < 1 || choice > match.wrestlers.length) {
+                await interaction.reply(`Invalid choice. Please choose a number between 1 and ${match.wrestlers.length}.`, { ephemeral: true });
+                return;
+            }
+
+            const chosenWrestler = match.wrestlers[choice - 1];
 
             console.log('Chosen wrestler:', chosenWrestler);
 
@@ -297,7 +333,7 @@ client.on('interactionCreate', async interaction => {
             // Add to bet history
             if (!betHistory[user]) betHistory[user] = [];
             betHistory[user].push({
-                match: `${match.wrestler1} vs ${match.wrestler2}`,
+                match: match.wrestlers.join(' vs '),
                 bet: { wrestler: chosenWrestler, amount: amount },
                 result: 'Pending'
             });
@@ -325,7 +361,12 @@ client.on('interactionCreate', async interaction => {
             }
 
             const winnerChoice = options.getInteger('winner');
-            const winner = winnerChoice === 1 ? match.wrestler1 : match.wrestler2;
+            if (winnerChoice < 1 || winnerChoice > match.wrestlers.length) {
+                await interaction.reply(`Invalid winner choice. Please choose a number between 1 and ${match.wrestlers.length}.`, { ephemeral: true });
+                return;
+            }
+
+            const winner = match.wrestlers[winnerChoice - 1];
 
             console.log('Result command received:', { winnerChoice, winner, match });
             console.log('Current bets:', bets);
@@ -334,19 +375,22 @@ client.on('interactionCreate', async interaction => {
             await interaction.deferReply();
 
             try {
-                // Process bets and generate messages
-                const messages = [];
+                // Calculate payout multiplier based on number of wrestlers
+                const payoutMultiplier = match.wrestlers.length;
+
+                // First, announce the winner
+                await interaction.channel.send(`**${winner}** has won the match!`);
+
+                // Process bets silently and update balances
                 for (let userId in bets) {
                     const bet = bets[userId];
                     console.log(`Processing bet for user ${userId}:`, bet);
                     if (bet.wrestler === winner) {
-                        const payout = bet.amount * 2; // Simple 2x payout
+                        const payout = bet.amount * payoutMultiplier;
                         updateUserBalance(userId, payout);
-                        messages.push(`<@${userId}> Congratulations! You won ${payout} coins by betting on ${winner}!`);
                         // Update bet history
                         betHistory[userId][betHistory[userId].length - 1].result = `Won ${payout} coins`;
                     } else {
-                        messages.push(`<@${userId}> Unfortunately, you lost your bet of ${bet.amount} coins on ${bet.wrestler}. Better luck next time!`);
                         // Update bet history
                         betHistory[userId][betHistory[userId].length - 1].result = `Lost ${bet.amount} coins`;
                     }
@@ -396,7 +440,14 @@ client.on('interactionCreate', async interaction => {
         }
 
         if (commandName === 'betstate') {
-            await interaction.reply(`Current betting state: ${isBettingOpen ? 'Open' : 'Closed'}`, { ephemeral: true });
+            let message = `Current betting state: ${isBettingOpen ? 'Open' : 'Closed'}`;
+            if (isBettingOpen && match.wrestlers) {
+                message += '\nCurrent wrestlers:\n';
+                match.wrestlers.forEach((wrestler, index) => {
+                    message += `${index + 1}: **${wrestler}**\n`;
+                });
+            }
+            await interaction.reply({ content: message, ephemeral: true });
         }
 
         if (commandName === 'history') {

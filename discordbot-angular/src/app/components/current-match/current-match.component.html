@@ -1,0 +1,38 @@
+<div class="current-match">
+  <div class="match-status" *ngIf="bettingState !== null">
+    <div class="status-badge" [class.active]="bettingState?.isBettingOpen">
+      {{ bettingState?.isBettingOpen ? 'Betting Open' : 'Betting Closed' }}
+    </div>
+  </div>
+
+  <div class="match-container" *ngIf="match !== null; else noMatch">
+    <h2>Current Match</h2>
+    <div class="wrestlers-grid">
+      <div class="wrestler-card" *ngFor="let wrestler of match.wrestlers; let i = index">
+        <div class="wrestler-number">#{{i + 1}}</div>
+        <h3>{{wrestler}}</h3>
+        <div class="bet-count">
+          {{ getBetCount(wrestler) }} bets
+        </div>
+      </div>
+    </div>
+
+    <div class="bets-summary" *ngIf="Object.keys(currentBets).length > 0">
+      <h3>Current Bets</h3>
+      <div class="bets-list">
+        <div class="bet-item" *ngFor="let bet of getBetsList()">
+          <span class="user-id">User {{ bet.userId }}</span>
+          <span class="bet-details">
+            {{ bet.amount }} coins on {{ bet.wrestler }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noMatch>
+    <div class="no-match">
+      <p>{{ error || 'No active match at the moment' }}</p>
+    </div>
+  </ng-template>
+</div>

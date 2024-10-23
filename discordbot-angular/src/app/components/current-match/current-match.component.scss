@@ -1,0 +1,122 @@
+.current-match {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .match-status {
+    margin-bottom: 20px;
+    text-align: center;
+
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background-color: #dc3545;
+      color: white;
+      font-weight: bold;
+
+      &.active {
+        background-color: #28a745;
+      }
+    }
+  }
+
+  .match-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+  }
+
+  .wrestlers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .wrestler-card {
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .wrestler-number {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #007bff;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    h3 {
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .bet-count {
+      color: #6c757d;
+      font-size: 14px;
+    }
+  }
+
+  .bets-summary {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+
+    h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .bets-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bet-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 4px;
+
+      .user-id {
+        font-weight: bold;
+        color: #495057;
+      }
+
+      .bet-details {
+        color: #6c757d;
+      }
+    }
+  }
+
+  .no-match {
+    text-align: center;
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #6c757d;
+  }
+}
