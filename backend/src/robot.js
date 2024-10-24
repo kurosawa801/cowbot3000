@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { clientId, guildIds } = require('./config.json');
 const { getCommands, handlers } = require('./modules/commandHandlers');
+const axios = require('axios');
 
 console.log('Script started');
 
@@ -11,13 +12,53 @@ if (!process.env.BOT_TOKEN) {
     process.exit(1);
 }
 
-console.log('BOT_TOKEN found');
+if (!process.env.BOT_TOKEN_OPEN_ROUTER) {
+    console.error('Missing BOT_TOKEN_OPEN_ROUTER in environment variables. Please check your .env file.');
+    process.exit(1);
+}
 
-// Initialize Discord client
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+console.log('Environment variables found');
+
+// Initialize Discord client with additional intents
+const client = new Client({ 
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent
+    ] 
+});
 
 // Register slash commands for multiple guilds
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+
+// Function to call OpenRouter API
+async function getAIResponse(prompt) {
+    try {
+        const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
+            model: "gryphe/mythomax-l2-13b",
+            messages: [
+                {
+                    role: 'system',
+                    content: "You are a bot for a discord server, you are cool, always knows what to say, and speak with internet lingo and emojis, you have to answer to whatever they ask you, whatever stupid or dumb it could be. And it is quite important to mention that the other interloper is really really cool! B)"
+                  },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ]
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.BOT_TOKEN_OPEN_ROUTER}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return response.data.choices[0].message.content;
+    } catch (error) {
+        console.error('Error calling OpenRouter API:', error);
+        return 'Sorry, I encountered an error while processing your request.';
+    }
+}
 
 (async () => {
     try {
@@ -47,6 +88,38 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 // Handle ready event
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+});
+
+// Handle message events for mentions
+client.on('messageCreate', async message => {
+    // Ignore messages from bots to prevent potential loops
+    if (message.author.bot) return;
+
+    // Check if the bot is mentioned
+    if (message.mentions.has(client.user)) {
+        try {
+            // Remove the bot mention and get the actual question
+            const question = message.content.replace(`<@${client.user.id}>`, '').trim();
+            
+            // If there's no question after removing the mention, prompt for one
+            if (!question) {
+                await message.reply('How can I help you?');
+                return;
+            }
+
+            // Show typing indicator while processing
+            await message.channel.sendTyping();
+
+            // Get response from AI
+            const response = await getAIResponse(question);
+
+            // Send the response
+            await message.reply(response);
+        } catch (error) {
+            console.error('Error handling mention:', error);
+            await message.reply('Sorry, I encountered an error while processing your request.');
+        }
+    }
 });
 
 // Handle interactions
