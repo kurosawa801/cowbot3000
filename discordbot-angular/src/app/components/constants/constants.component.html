@@ -1,0 +1,60 @@
+<div class="constants-editor">
+  <h2>Edit Constants</h2>
+
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+  <div class="alert alert-success" *ngIf="success">{{ success }}</div>
+
+  <div class="constants-form" *ngIf="constants">
+    <div class="form-group">
+      <label>Initial Coins</label>
+      <input type="number" [(ngModel)]="constants.INITIAL_COINS" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Betting State File</label>
+      <input type="text" [(ngModel)]="constants.BETTING_STATE_FILE" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>History File</label>
+      <input type="text" [(ngModel)]="constants.HISTORY_FILE" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Coins File</label>
+      <input type="text" [(ngModel)]="constants.COINS_FILE" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Match File</label>
+      <input type="text" [(ngModel)]="constants.MATCH_FILE" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>Bets File</label>
+      <input type="text" [(ngModel)]="constants.BETS_FILE" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label>AI System Message</label>
+      <textarea [(ngModel)]="constants.AI_SYSTEM_MESSAGE" class="form-control" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>AI User Message</label>
+      <textarea [(ngModel)]="constants.AI_USER_MESSAGE" class="form-control" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>AI Assistant Message</label>
+      <textarea [(ngModel)]="constants.AI_ASSISTANT_MESSAGE" class="form-control" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>AI Error Message</label>
+      <input type="text" [(ngModel)]="constants.AI_ERROR_MESSAGE" class="form-control">
+    </div>
+
+    <button (click)="saveConstants()" class="btn btn-primary">Save Changes</button>
+  </div>
+</div>

@@ -69,9 +69,10 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 async function getAIResponse(prompt, channelId) {
     try {
         const context = getContextFromHistory(channelId);
+        console.log(context);
         
         const response = await axios.post('https://api.anthropic.com/v1/messages', {
-            model: "claude-3-sonnet-20240229",
+            model: "claude-3-5-sonnet-20241022",
             max_tokens: 400,
             temperature: 0.8,            
             top_p: 1,

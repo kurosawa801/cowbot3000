@@ -14,6 +14,38 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
+const constants = require('./modules/constants');
+
+// Get constants
+app.get('/api/constants', (req, res) => {
+    try {
+        res.json(constants);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching constants' });
+    }
+});
+
+// Update constants
+app.put('/api/constants', (req, res) => {
+    try {
+        const updatedConstants = req.body;
+        // Update the constants object
+        Object.assign(constants, updatedConstants);
+        
+        // Write the updated constants to the file
+        fs.writeFileSync(
+            path.join(__dirname, 'modules', 'constants.js'),
+            `module.exports = ${JSON.stringify(constants, null, 4)};`
+        );
+
+        res.json({ message: 'Constants updated successfully', constants: constants });
+    } catch (error) {
+        console.error('Error updating constants:', error);
+        res.status(500).json({ message: 'Error updating constants' });
+    }
+});
+
+
 
 // Get current match
 app.get('/api/match', (req, res) => {
