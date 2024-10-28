@@ -340,6 +340,14 @@
         "amount": 100
       },
       "result": "Won 200 coins"
+    },
+    {
+      "match": "literally anyone joins vs not one soul",
+      "bet": {
+        "wrestler": "not one soul",
+        "amount": 300
+      },
+      "result": "Lost 300 coins"
     }
   ],
   "278352341734785024": [
@@ -422,6 +430,14 @@
         "amount": 1
       },
       "result": "Won 2 coins"
+    },
+    {
+      "match": "literally anyone joins vs not one soul",
+      "bet": {
+        "wrestler": "not one soul",
+        "amount": 500
+      },
+      "result": "Lost 500 coins"
     }
   ],
   "148155468416679946": [
