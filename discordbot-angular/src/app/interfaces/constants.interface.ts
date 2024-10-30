@@ -6,7 +6,9 @@ export interface Constants {
   BETS_FILE: string;
   INITIAL_COINS: number;
   AI_SYSTEM_MESSAGE: string;
-  AI_USER_MESSAGE: string;
   AI_ASSISTANT_MESSAGE: string;
+  AI_USER_MESSAGE_FIRST: string;
+  AI_USER_MESSAGE_SECOND: string;
   AI_ERROR_MESSAGE: string;
+  AI_CHARACTER: string;
 }
