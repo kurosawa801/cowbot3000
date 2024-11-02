@@ -40,7 +40,7 @@ function addToHistory(channelId, message) {
     
     const history = messageHistory.get(channelId);
     const messageContent = {
-        author: message.author.username,
+        author: message.member?.displayName || message.author.username,
         content: message.content,
         timestamp: message.createdTimestamp
     };
@@ -98,7 +98,7 @@ async function getReplyChainContext(message) {
             
             // Add message to context
             contextMessages.unshift({
-                author: repliedTo.author.username,
+                author: repliedTo.member?.displayName || repliedTo.author.username,
                 content: repliedTo.content,
                 timestamp: repliedTo.createdTimestamp,
                 isBot: repliedTo.author.bot

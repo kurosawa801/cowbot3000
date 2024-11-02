@@ -19,52 +19,77 @@ const constants = require('./modules/constants');
 // Get constants
 app.get('/api/constants', (req, res) => {
     try {
+        // Always return fresh values
         res.json(constants);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching constants' });
     }
 });
 
+// Helper function to format value for .env file
+function formatEnvValue(value) {
+    const stringValue = String(value);
+    
+    // If the value contains newlines or quotes
+    if (stringValue.includes('\n') || stringValue.includes('"') || stringValue.includes("'")) {
+        // Escape double quotes and wrap in double quotes
+        return `"${stringValue.replace(/"/g, '\\"')}"`;
+    }
+    
+    // If the value contains spaces but no newlines or quotes
+    if (stringValue.includes(' ')) {
+        return `"${stringValue}"`;
+    }
+    
+    return stringValue;
+}
+
 // Update constants
 app.put('/api/constants', (req, res) => {
     try {
         const updatedConstants = req.body;
-        
-        // Read existing .env content
         const envPath = path.join(__dirname, '..', '.env');
-        const existingEnvContent = fs.readFileSync(envPath, 'utf8');
         
-        // Parse existing .env into key-value pairs
-        const envLines = existingEnvContent.split('\n');
-        const existingEnv = {};
-        envLines.forEach(line => {
-            if (line.trim() && !line.startsWith('#')) {
-                const [key, ...valueParts] = line.split('=');
-                existingEnv[key.trim()] = valueParts.join('=').trim();
-            }
-        });
+        // Define which constants can be updated via this endpoint
+        const allowedConstants = [
+            'AI_SYSTEM_MESSAGE',
+            'AI_USER_MESSAGE_FIRST',
+            'AI_USER_MESSAGE_SECOND',
+            'AI_CHARACTER',
+            'AI_ASSISTANT_MESSAGE',
+            'AI_ERROR_MESSAGE'
+        ];
 
-        // Update process.env and existingEnv with new values
-        Object.entries(updatedConstants).forEach(([key, value]) => {
-            process.env[key] = value;
-            existingEnv[key] = value;
-        });
-
-        // Create new .env content preserving comments and formatting
-        const newEnvContent = Object.entries(existingEnv)
-            .map(([key, value]) => {
-                // Convert value to string and check if it needs quotes
-                const stringValue = String(value);
-                if (stringValue.includes('\n') || stringValue.includes('"') || stringValue.includes("'") || stringValue.includes(' ')) {
-                    const escapedValue = stringValue.replace(/"/g, '\\"');
-                    return `${key}="${escapedValue}"`;
+        // Get the bot tokens from current .env
+        let botTokens = {};
+        if (fs.existsSync(envPath)) {
+            const currentEnvContent = fs.readFileSync(envPath, 'utf8');
+            currentEnvContent.split('\n').forEach(line => {
+                if (line.startsWith('BOT_TOKEN')) {
+                    const [key, ...valueParts] = line.split('=');
+                    botTokens[key.trim()] = valueParts.join('=').trim();
                 }
-                return `${key}=${stringValue}`;
-            })
-            .join('\n');
+            });
+        }
 
-        // Write to .env file
-        fs.writeFileSync(envPath, newEnvContent);
+        // Start with bot tokens
+        const newEnvLines = Object.entries(botTokens)
+            .map(([key, value]) => `${key}=${value}`);
+
+        // Add updated constants
+        Object.entries(updatedConstants)
+            .filter(([key]) => allowedConstants.includes(key))
+            .forEach(([key, value]) => {
+                const formattedValue = formatEnvValue(value);
+                newEnvLines.push(`${key}=${formattedValue}`);
+                process.env[key] = value;
+            });
+
+        // Write the new .env content
+        fs.writeFileSync(envPath, newEnvLines.join('\n'));
+
+        // Refresh the constants module to reflect new values
+        constants.refresh();
 
         res.json({ message: 'Constants updated successfully', constants: updatedConstants });
     } catch (error) {
