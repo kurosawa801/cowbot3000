@@ -1,7 +1,6 @@
 .env
 config.json
 node_modules
-backend/src/modules/constants.js
 backend/src/memories.json
 backend/src/bet_history.json
 backend/src/coins.json
