@@ -5,3 +5,7 @@ backend/src/modules/constants.js
 backend/src/memories.json
 backend/src/bet_history.json
 backend/src/coins.json
+backend/bet_history.json
+backend/coins.json
+**/bet_history.json
+**/coins.json
