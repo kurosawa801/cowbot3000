@@ -1,117 +1,167 @@
 # Discord Betting Bot with Angular Frontend
 
-A Discord bot for managing betting on wrestling matches, now with a web interface built in Angular.
+A comprehensive Discord bot system that combines betting management for wrestling matches with an AI-powered chat assistant. Features a modern Angular web interface for real-time monitoring and interaction.
+
+## Core Features
+
+### Betting System
+- Support for matches with up to 8 wrestlers
+- Real-time bet placement and tracking
+- Dynamic payout calculations
+- User balance management
+- Comprehensive betting history
+- Coin donation system between users
+- Global user rankings
+
+### AI Chat Assistant
+- Powered by Claude 3 Sonnet
+- Context-aware conversations with memory
+- Image processing capabilities
+- Reply chain tracking
+- Persistent chat history
+- Emoji recognition and handling
+
+### Web Interface
+- Real-time match status monitoring
+- Live betting state updates
+- Current bets visualization
+- User statistics and rankings
+- 30-second auto-refresh
+- Responsive design
 
 ## Project Structure
 
-The project is split into two main parts:
-
 ### Backend (`/backend`)
-- Discord bot functionality
+- Discord bot for user interactions
 - Express API server
-- Data storage and management
-- Betting system logic
+- Claude AI integration
+- Memory system for chat persistence
+- File-based data storage
 
 ### Frontend (`/discordbot-angular`)
-- Angular web interface
-- Real-time match monitoring
-- Betting status display
-- User statistics
+- Angular 17 web application
+- Standalone component architecture
+- Real-time data synchronization
+- TypeScript/SCSS implementation
+
+## Discord Commands
+
+### Betting Commands
+- `/start <wrestler1> <wrestler2> [wrestler3-8]` - Start a new match (Handler only)
+- `/bet <choice> <amount>` - Place a bet on a wrestler
+- `/closebet` - Close betting for current match (Handler only)
+- `/result <winner>` - Declare match result (Handler only)
+- `/balance` - Check your coin balance
+- `/betstate` - Check current betting state
+- `/history` - View betting history
+- `/ranking` - Show global rankings
+
+### Economy Commands
+- `/addcoins <user> <amount>` - Add coins to user (Handler only)
+- `/donate <user> <amount>` - Donate coins to another user
+
+### Chat Features
+- Mention or reply to the bot for AI conversation
+- Image sharing support
+- Context-aware responses
+- Memory of past interactions
 
 ## Setup Instructions
 
-1. Install dependencies for both backend and frontend:
+1. Install dependencies:
 ```bash
-# Install backend dependencies
+# Backend setup
 cd backend
 npm install
 
-# Install frontend dependencies
+# Frontend setup
 cd ../discordbot-angular
 npm install
 ```
 
 2. Configure environment variables:
-- Create a `.env` file in the `/backend` directory
-- Add your Discord bot token:
-```
-BOT_TOKEN=your_bot_token_here
+Create `.env` in `/backend`:
+```env
+BOT_TOKEN=your_discord_bot_token
+BOT_TOKEN_CLAUDE=your_claude_api_key
+PORT=3000
 ```
 
 3. Configure Discord bot:
-- Update `config.json` in `/backend/src` with your Discord server details:
+Create/update `config.json` in `/backend/src`:
 ```json
 {
-  "clientId": "your_client_id",
-  "guildIds": ["your_guild_ids"]
+  "clientId": "your_bot_client_id",
+  "guildIds": ["your_discord_server_ids"]
 }
 ```
 
 ## Running the Application
 
-Start both backend and frontend with a single command:
+### Development Mode
+Start both services:
 ```bash
 cd backend
 npm run dev:all
 ```
 
-This will start:
-- Backend server on port 3000
-- Angular frontend on port 4200
+This launches:
+- Backend API (Port 3000)
+- Angular frontend (Port 4200)
 - Discord bot service
 
-## Features
-
-### Discord Bot Commands
-- `/start` - Start a new betting round
-- `/bet` - Place a bet on a wrestler
-- `/closebet` - Close betting for current match
-- `/result` - Declare match result
-- `/balance` - Check your coin balance
-- `/betstate` - Check current betting state
-- `/history` - View betting history
-- `/ranking` - Show user rankings
-- `/addcoins` - Add coins (Handler only)
-- `/donate` - Donate coins to another user
-
-### Web Interface
-- Real-time match status display
-- Current betting status
-- Active bets visualization
-- User statistics and rankings
-- Responsive design for mobile and desktop
-
-## Development
-
-### Backend Development
+### Separate Component Launch
+Backend only:
 ```bash
 cd backend
 npm run dev
 ```
 
-### Frontend Development
+Frontend only:
 ```bash
 cd discordbot-angular
 npm start
 ```
 
-## Technologies Used
+## Technical Details
 
-- Backend:
-  - Node.js
-  - Express
-  - Discord.js
-  - File-based data storage
+### Backend Architecture
+- Node.js with Express
+- Discord.js for bot functionality
+- Claude AI integration
+- Memory management system
+- File-based persistent storage
+- Real-time data synchronization
 
-- Frontend:
-  - Angular 17
-  - TypeScript
-  - SCSS
-  - Standalone Components
+### Frontend Architecture
+- Angular 17
+- Standalone components
+- TypeScript/SCSS
+- HTTP client services
+- Auto-refresh mechanism
+- Responsive design
+
+### Data Management
+- JSON-based storage system
+- Memory persistence for chat
+- Real-time state tracking
+- User balance management
+- Betting history logging
+
+## Security & Permissions
+
+- Handler role required for administrative commands:
+  - Starting matches
+  - Closing bets
+  - Declaring results
+  - Adding coins
+- User authentication for betting
+- Balance verification for bets
+- Secure API endpoints
 
 ## Notes
-
-- The web interface updates every 30 seconds to show the latest match and betting information
-- All Discord bot functionality remains unchanged
-- Data is synchronized between Discord bot and web interface
-- Handler role is required for administrative commands
+- Web interface refreshes automatically every 30 seconds
+- Images shared with the bot are processed through Claude AI
+- Chat context is maintained across conversations
+- Betting transactions are logged and traceable
+- System maintains state across restarts

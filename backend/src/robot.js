@@ -245,13 +245,33 @@ client.on('messageCreate', async message => {
     addToHistory(message.channelId, message);
 
     // Check if the message is a mention of the bot or a reply to the bot's message
-    const isReplyToBot = message.reference && (
-        await message.channel.messages.fetch(message.reference.messageId)
-    ).author.id === client.user.id;
+    let isReplyToBot = false;
+    try {
+        if (message.reference) {
+            const repliedMessage = await message.channel.messages.fetch(message.reference.messageId);
+            isReplyToBot = repliedMessage.author.id === client.user.id;
+        }
+    } catch (error) {
+        console.error('Error fetching replied message:', error);
+        // Continue execution without the reply context
+    }
 
     if (message.mentions.has(client.user) || isReplyToBot) {
         try {
-            const question = message.content.replace(`<@${client.user.id}>`, '').trim();
+            // Clean and validate the message content
+            let question = message.content.replace(`<@${client.user.id}>`, '').trim();
+            
+            // Handle empty or emoji-only messages
+            if (!question && !message.attachments.size) {
+                await message.reply('Nyaaaaaaaaaaa, how Cowie can help you?');
+                return;
+            }
+
+            // If message only contains emojis, add some context
+            if (question.match(/^\p{Emoji}+$/u)) {
+                question = `User reacted with emoji: ${question}`;
+            }
+
             let imageUrl = null;
 
             // Check for attachments
@@ -268,14 +288,23 @@ client.on('messageCreate', async message => {
                 replyContext = await getReplyChainContext(message);
             }
 
-            if (!question && !imageUrl) {
-                await message.reply('Nyaaaaaaaaaaa, how Cowie can help you?');
-                return;
-            }
-
             await message.channel.sendTyping();
             const response = await getAIResponse(question, message.channelId, imageUrl, replyContext);
-            await message.reply(response);
+            
+            // Use channel.send instead of message.reply when the original message might be gone
+            try {
+                await message.reply(response);
+            } catch (replyError) {
+                if (replyError.code === 50035) {
+                    // If reply fails, fall back to regular message
+                    await message.channel.send({
+                        content: response,
+                        allowedMentions: { repliedUser: false }
+                    });
+                } else {
+                    throw replyError;
+                }
+            }
 
             const userMemories = getUserMemories(message.author.id);
             const memoryContext = userMemories
@@ -288,7 +317,17 @@ client.on('messageCreate', async message => {
             });
         } catch (error) {
             console.error('Error handling message:', error);
-            await message.reply(AI_ERROR_MESSAGE);
+            try {
+                // Use channel.send instead of reply for error messages too
+                await message.channel.send({
+                    content: error.code === 50035 ? 
+                        'Uhh can you say that again?' : 
+                        AI_ERROR_MESSAGE,
+                    allowedMentions: { repliedUser: false }
+                });
+            } catch (sendError) {
+                console.error('Error sending error message:', sendError);
+            }
         }
     }
 });
