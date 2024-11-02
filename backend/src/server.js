@@ -29,23 +29,49 @@ app.get('/api/constants', (req, res) => {
 app.put('/api/constants', (req, res) => {
     try {
         const updatedConstants = req.body;
-        // Update the constants object
-        Object.assign(constants, updatedConstants);
         
-        // Write the updated constants to the file
-        fs.writeFileSync(
-            path.join(__dirname, 'modules', 'constants.js'),
-            `module.exports = ${JSON.stringify(constants, null, 4)};`
-        );
+        // Read existing .env content
+        const envPath = path.join(__dirname, '..', '.env');
+        const existingEnvContent = fs.readFileSync(envPath, 'utf8');
+        
+        // Parse existing .env into key-value pairs
+        const envLines = existingEnvContent.split('\n');
+        const existingEnv = {};
+        envLines.forEach(line => {
+            if (line.trim() && !line.startsWith('#')) {
+                const [key, ...valueParts] = line.split('=');
+                existingEnv[key.trim()] = valueParts.join('=').trim();
+            }
+        });
 
-        res.json({ message: 'Constants updated successfully', constants: constants });
+        // Update process.env and existingEnv with new values
+        Object.entries(updatedConstants).forEach(([key, value]) => {
+            process.env[key] = value;
+            existingEnv[key] = value;
+        });
+
+        // Create new .env content preserving comments and formatting
+        const newEnvContent = Object.entries(existingEnv)
+            .map(([key, value]) => {
+                // Convert value to string and check if it needs quotes
+                const stringValue = String(value);
+                if (stringValue.includes('\n') || stringValue.includes('"') || stringValue.includes("'") || stringValue.includes(' ')) {
+                    const escapedValue = stringValue.replace(/"/g, '\\"');
+                    return `${key}="${escapedValue}"`;
+                }
+                return `${key}=${stringValue}`;
+            })
+            .join('\n');
+
+        // Write to .env file
+        fs.writeFileSync(envPath, newEnvContent);
+
+        res.json({ message: 'Constants updated successfully', constants: updatedConstants });
     } catch (error) {
         console.error('Error updating constants:', error);
         res.status(500).json({ message: 'Error updating constants' });
     }
 });
-
-
 
 // Get current match
 app.get('/api/match', (req, res) => {
